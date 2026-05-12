@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../features/auth/authSlice'
 import { useNavigate, Link } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [errors, setErrors] = useState({})
   const [touched, setTouched] = useState({})
@@ -123,91 +126,111 @@ const Login = () => {
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gray-200 px-4 py-8'>
-      <form
-        onSubmit={handleSubmit}
-        className='w-full max-w-md rounded-lg bg-white p-8 shadow-lg'
-      >
-        <h2 className='mb-2 text-3xl font-bold text-black'>Login</h2>
-        <p className='mb-6 text-sm text-gray-600'>Sign in to your account</p>
+    <>
+      <SEO
+        title="Login Page"
+        description="Sign in to your account to access the dashboard and manage your tasks."
+        keywords="login, sign in, authentication, dashboard access"
 
-        {/* Server Error */}
-        {error && (
-          <div className='mb-6 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-start gap-2'>
-            <span className='text-red-500 font-bold'>⚠</span>
-            <div>
-              <p className='font-semibold'>Login Failed</p>
-              <p>{error}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Username */}
-        <div className='mb-5'>
-          <label className='mb-2 block text-sm font-medium text-black'>
-            Username: <span className='text-red-500'>*</span>
-          </label>
-          <input
-            type='text'
-            name='username'
-            placeholder='Enter your username'
-            className={`w-full rounded border p-3 outline-none transition ${errors.username && touched.username
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-              : 'border-gray-300 focus:border-blue-500'
-              }`}
-            value={formData.username}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.username && touched.username && (
-            <p className='mt-2 text-xs text-red-500 flex items-center gap-1'>
-              <span>✗</span> {errors.username}
-            </p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div className='mb-6'>
-          <label className='mb-2 block text-sm font-medium text-black'>
-            Password: <span className='text-red-500'>*</span>
-          </label>
-          <input
-            type='password'
-            name='password'
-            placeholder='Enter your password'
-            className={`w-full rounded border p-3 outline-none transition ${errors.password && touched.password
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
-              : 'border-gray-300 focus:border-blue-500'
-              }`}
-            value={formData.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.password && touched.password && (
-            <p className='mt-2 text-xs text-red-500 flex items-center gap-1'>
-              <span>✗</span> {errors.password}
-            </p>
-          )}
-        </div>
-
-        {/* Login Button */}
-        <button
-          type='submit'
-          className='w-full rounded bg-blue-600 p-3 text-white font-medium transition hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
-          disabled={loading}
+      />
+      <div className='flex min-h-screen items-center justify-center bg-gray-200 px-4 py-8'>
+        <form
+          onSubmit={handleSubmit}
+          className='w-full max-w-md rounded-lg bg-white p-8 shadow-lg'
         >
-          {loading ? 'Signing in...' : 'Login'}
-        </button>
+          <h2 className='mb-2 text-3xl font-bold text-black'>Login</h2>
+          <p className='mb-6 text-sm text-gray-600'>Sign in to your account</p>
 
-        {/* Register Link */}
-        <p className='mt-6 text-center text-sm text-gray-600'>
-          Don't have an account?{' '}
-          <Link className='font-semibold text-blue-600 hover:underline' to='/register'>
-            Register here
-          </Link>
-        </p>
-      </form>
-    </div>
+          {/* Server Error */}
+          {error && (
+            <div className='mb-6 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-start gap-2'>
+              <span className='text-red-500 font-bold'>⚠</span>
+              <div>
+                <p className='font-semibold'>Login Failed</p>
+                <p>{error}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Username */}
+          <div className='mb-5'>
+            <label className='mb-2 block text-sm font-medium text-black'>
+              Username: <span className='text-red-500'>*</span>
+            </label>
+            <input
+              type='text'
+              name='username'
+              placeholder='Enter your username'
+              className={`w-full rounded border p-3 outline-none transition ${errors.username && touched.username
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                : 'border-gray-300 focus:border-blue-500'
+                }`}
+              value={formData.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.username && touched.username && (
+              <p className='mt-2 text-xs text-red-500 flex items-center gap-1'>
+                <span>✗</span> {errors.username}
+              </p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div className='mb-6'>
+            <label className='mb-2 block text-sm font-medium text-black'>
+              Password: <span className='text-red-500'>*</span>
+            </label>
+
+            <div className='relative'>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name='password'
+                placeholder='Enter your password'
+                className={`w-full rounded border p-3 pr-14 outline-none transition ${errors.password && touched.password
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-200'
+                    : 'border-gray-300 focus:border-blue-500'
+                  }`}
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500'
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+
+            {errors.password && touched.password && (
+              <p className='mt-2 flex items-center gap-1 text-xs text-red-500'>
+                <span>✗</span> {errors.password}
+              </p>
+            )}
+          </div>
+
+          {/* Login Button */}
+          <button
+            type='submit'
+            className='w-full rounded bg-blue-600 p-3 text-white font-medium transition hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed'
+            disabled={loading}
+          >
+            {loading ? 'Signing in...' : 'Login'}
+          </button>
+
+          {/* Register Link */}
+          <p className='mt-6 text-center text-sm text-gray-600'>
+            Don't have an account?{' '}
+            <Link className='font-semibold text-blue-600 hover:underline' to='/register'>
+              Register here
+            </Link>
+          </p>
+        </form>
+      </div>
+    </>
   )
 }
 
